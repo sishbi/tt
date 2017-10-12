@@ -1,0 +1,18 @@
+{
+  "paths": {
+    "source": {
+      "common": "src/main/webapp",
+      "web": "src/main/webapp",
+      "javascript": "js",
+      "styles": "css",
+      "themes": "themes"
+    },
+    "staging": {
+      "web": "target/web",
+      "hybrid": "target/hybrid",
+      "themes": "target/themes"
+    }
+  },
+  "defaultBrowser": "chrome",
+  "generatorVersion": "4.0.0"
+}
