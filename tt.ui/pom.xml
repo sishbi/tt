@@ -18,6 +18,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+    <js-build>build</js-build>
   </properties>
 
   <build>
@@ -56,7 +57,7 @@
               <goal>grunt</goal>
             </goals>
             <configuration>
-              <arguments>build --platform=web</arguments>
+              <arguments>${js-build} --platform=web</arguments>
             </configuration>
           </execution>
         </executions>

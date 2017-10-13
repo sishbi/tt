@@ -1,0 +1,7 @@
+tt-question:not(.oj-complete) {
+  visibility: hidden;
+}
+
+tt-question {
+
+}

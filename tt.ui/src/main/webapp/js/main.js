@@ -51,25 +51,26 @@ requirejs.config(
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['ojs/ojcore', 'knockout', 'appController', 'ojs/ojknockout', 'ojs/ojbutton', 'ojs/ojtoolbar', 'ojs/ojmenu'],
+require(['ojs/ojcore', 'knockout', 'appController', 'ojs/ojknockout',
+  'ojs/ojmodule', 'ojs/ojrouter', 'ojs/ojnavigationlist', 'ojs/ojbutton', 'ojs/ojtoolbar'],
   function (oj, ko, app) { // this callback gets executed when all required modules are loaded
     
     $(function() {
-      
+
       function init() {
-        // Bind your ViewModel for the content of the whole page body.
-        ko.applyBindings(app, document.getElementById('globalBody'));
+        oj.Router.sync().then(
+          function () {
+            // Bind your ViewModel for the content of the whole page body.
+            ko.applyBindings(app, document.getElementById('globalBody'));
+          },
+          function (error) {
+            oj.Logger.error('Error in root start: ' + error.message);
+          }
+        );
       }
 
-      // If running in a hybrid (e.g. Cordova) environment, we need to wait for the deviceready 
-      // event before executing any code that might interact with Cordova APIs or plugins.
-      if ($(document.body).hasClass('oj-hybrid')) {
-        document.addEventListener("deviceready", init);
-      } else {
-        init();
-      }
-
+      init();
     });
-
+    
   }
 );
