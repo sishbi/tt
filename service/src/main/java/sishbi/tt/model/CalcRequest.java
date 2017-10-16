@@ -12,9 +12,10 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CalcRequest {
-  final List<Integer> by;
-  final int from;
-  final int to;
+  private final List<Double> by;
+  private final int from;
+  private final int to;
+  private final String op;
 
   /**
    * Default constructor.
@@ -23,6 +24,7 @@ public class CalcRequest {
     by = new ArrayList<>();
     from = 0;
     to = 0;
+    op = "";
   }
 
   /**
@@ -31,13 +33,14 @@ public class CalcRequest {
    * @param from min times (e.g. X * from)
    * @param to   max times (e.g. Y * to)
    */
-  public CalcRequest(List<Integer> by, int from, int to) {
+  public CalcRequest(List<Double> by, int from, int to, String op) {
     this.by = by;
     this.from = from;
     this.to = to;
+    this.op = op;
   }
 
-  public List<Integer> getBy() {
+  public List<Double> getBy() {
     return by;
   }
 
@@ -49,12 +52,17 @@ public class CalcRequest {
     return to;
   }
 
+  public String getOp() {
+    return op;
+  }
+
   @Override
   public String toString() {
     return "CalcRequest{"
       + "by=" + by
       + ", from=" + from
       + ", to=" + to
+      + ", op=" + op
       + '}';
   }
 }

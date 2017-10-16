@@ -5,11 +5,189 @@
 /*
  * Your about ViewModel code goes here
  */
-define(['ojs/ojcore', 'knockout', 'jquery', 'jet-composites/tt-question/loader'],
- function(oj, ko, $) {
+define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset", "ojs/ojradioset",
+        "ojs/ojknockout", "ojs/ojinputtext", "ojs/ojvalidation-number", "ojs/ojlabel"],
+ function(oj, ko, $, q) {
   
-    function AboutViewModel() {
+    function TimesViewModel() {
       var self = this;
+      // calculation input
+      self.basicAdv = ko.observable("basic");
+      self.timesByBasic = ko.observableArray([]);
+      self.timesByAdv = ko.observableArray([]);
+      self.numQuestions = ko.observable("12");
+      self.operation = ko.observable("*");
+      self.from = 1;
+      self.to = 12;
+      self.timesBy = [];
+      // calculation response
+      self.calculations = [];
+      // position within calculation array (starting from zero)
+      self.position = 0;
+      self.numAnswers = ko.observable(1);
+      // whether the questions are running/complete or not
+      self.running = ko.observable(false);
+      // question symbols
+      self.multiplySymbol = "\u00D7";
+      self.divideSymbol = "\u00F7";
+      // question: <factor1> <multiply/divide> <factor2> = <answer>
+      self.symbol = ko.observable(self.multiplySymbol);
+      self.factor1 = ko.observable("2");
+      self.factor2 = ko.observable("2");
+      self.answer = ko.observable("");
+      // text field for answer
+      self.userAnswer = "";
+      self.calcAnswer = "";
+      self.answerShouldBe = ko.observable("");
+      // is the answer correct?
+      self.answered = ko.observable(false);
+      self.correct = ko.observable("");
+      self.isComplete = ko.observable(false);
+      self.correctAnswers = 0;
+      self.resBegin = "You answered ";
+      self.resEnd = " questions correctly";
+      self.resultTxt = ko.observable("");
+
+      self.isRunning = ko.computed(function() {
+        return self.running() === true;
+      });
+      self.notRunning = ko.computed(function() {
+        return self.running() === false;
+      });
+      self.isBasic = ko.computed(function() {
+        return self.basicAdv() === "basic";
+      });
+      self.isAdvanced = ko.computed(function() {
+        return self.basicAdv() === "advanced";
+      });
+
+      self.noStart = ko.computed(function() {
+        let numBasic = self.timesByBasic().length;
+        let numAdv = self.timesByAdv().length;
+        console.log("noStart: basicAdv=" + self.basicAdv() + ", numBasic=" + numBasic + ", numAdv=" + numAdv);
+        return (self.isBasic() && numBasic === 0) ||
+               (self.isAdvanced() && numAdv === 0);
+      });
+
+      self.setAll = function() {
+        console.log("Set All");
+        self.timesByBasic(["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
+        return true;
+      };
+
+      self.setNone = function() {
+        console.log("Set None");
+        self.timesByBasic([]);
+        self.timesByAdv([]);
+        return true;
+      };
+
+      self.numConverter =
+        oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_NUMBER)
+          .createConverter({
+            "minimumFractionDigits": 0,
+            "maximumFractionDigits": 0,
+            "minimumIntegerDigits": 1,
+            "style": "decimal",
+            "useGrouping": false
+          });
+
+      self.questionAnswered = function(event) {
+        console.log("questionAnswered: answer=", event.detail.value);
+        if (event.detail.value !== "") {
+          self.userAnswer = parseFloat(event.detail.value);
+          self.answered(true);
+          var num = self.numAnswers();
+          num++;
+          self.numAnswers(num);
+          console.log("userAnswer=" + self.userAnswer + ", calcAnswer=" + self.calcAnswer);
+          var nextTimeout = 500;
+          if (self.userAnswer === self.calcAnswer) {
+            self.correctAnswers++;
+            self.correct("oj-fwk-icon-status-confirmation");
+            self.answerShouldBe("");
+          } else {
+            self.correct("oj-fwk-icon-status-error");
+            self.answerShouldBe(self.calcAnswer);
+            nextTimeout = 1000;
+          }
+
+          setTimeout(function() {
+            self.answer("");
+            self.correct("");
+            self.answerShouldBe("");
+            self.answered(false);
+            self.nextQuestion();
+          }, nextTimeout);
+        }
+      };
+
+      self.nextQuestion = function() {
+        console.log("nextQuestion: position=" + self.position +
+                    ", num calculations=" + self.calculations.length);
+        if (self.position >= self.calculations.length) {
+          self.position = 0;
+        }
+        if (self.numAnswers() > self.numQuestions()) {
+          self.resultTxt(self.resBegin + self.correctAnswers + self.resEnd);
+          self.isComplete(true);
+          return;
+        }
+        var calc = self.calculations[self.position++];
+        console.log("nextQuestion: calc=" + JSON.stringify(calc, null, 2));
+        self.factor1(calc.times);
+        self.factor2(calc.by);
+        self.symbol(calc.op === "*" ? self.multiplySymbol : self.divideSymbol);
+        self.userAnswer = 0;
+        self.calcAnswer = calc.answer;
+      };
+
+      self.endQuestions = function() {
+        console.log("endQuestions");
+        self.running(false);
+        self.isComplete(false);
+      };
+
+      self.getCalculations = function() {
+        if (self.isBasic()) {
+          self.to = 12;
+          self.timesBy = self.timesByBasic();
+        } else if (self.isAdvanced()) {
+          self.to = 50;
+          self.timesBy = self.timesByAdv();
+        }
+        self.op = self.operation();
+        console.log("getCalculation, by=" + self.timesBy + ", from=" + self.from +
+                    ", to=" + self.to + ", op=" + self.op);
+        var calcReq = {
+          by: self.timesBy,
+          from: self.from,
+          to: self.to,
+          op: self.op
+        };
+        console.log("Sending calc request: " + JSON.stringify(calcReq));
+        self.running(true);
+
+        fetch("http://localhost:8080/tt.service/api/times", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(calcReq)
+        })
+          .then(function(response) { return response.json(); })
+          .then(function(json) {
+            console.log("Got calc response: length=" + json.length, json);
+            self.calculations = json;
+            self.correctAnswers = 0;
+            self.numAnswers(1);
+            self.position = 0;
+            self.nextQuestion();
+          });
+      };
+
       // Below are a subset of the ViewModel methods invoked by the ojModule binding
       // Please reference the ojModule jsDoc for additional available methods.
 
@@ -19,8 +197,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'jet-composites/tt-question/loader']
        * here that can return a Promise which will delay the handleAttached function
        * call below until the Promise is resolved.
        * @param {Object} info - An object with the following key-value pairs:
-       * @param {Node} info.element - DOM element or where the binding is attached. This may be a 'virtual' element (comment node).
-       * @param {Function} info.valueAccessor - The binding's value accessor.
+       * @param {Node} info.element - DOM element or where the binding is attached. This may be a "virtual" element (comment node).
+       * @param {Function} info.valueAccessor - The binding"s value accessor.
        * @return {Promise|undefined} - If the callback returns a Promise, the next phase (attaching DOM) will be delayed until
        * the promise is resolved
        */
@@ -33,8 +211,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'jet-composites/tt-question/loader']
        * document DOM.  The application can put logic that requires the DOM being
        * attached here.
        * @param {Object} info - An object with the following key-value pairs:
-       * @param {Node} info.element - DOM element or where the binding is attached. This may be a 'virtual' element (comment node).
-       * @param {Function} info.valueAccessor - The binding's value accessor.
+       * @param {Node} info.element - DOM element or where the binding is attached. This may be a "virtual" element (comment node).
+       * @param {Function} info.valueAccessor - The binding"s value accessor.
        * @param {boolean} info.fromCache - A boolean indicating whether the module was retrieved from cache.
        */
       self.handleAttached = function(info) {
@@ -47,8 +225,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'jet-composites/tt-question/loader']
        * If the current View is retrieved from cache, the bindings will not be re-applied
        * and this callback will not be invoked.
        * @param {Object} info - An object with the following key-value pairs:
-       * @param {Node} info.element - DOM element or where the binding is attached. This may be a 'virtual' element (comment node).
-       * @param {Function} info.valueAccessor - The binding's value accessor.
+       * @param {Node} info.element - DOM element or where the binding is attached. This may be a "virtual" element (comment node).
+       * @param {Function} info.valueAccessor - The binding"s value accessor.
        */
       self.handleBindingsApplied = function(info) {
         // Implement if needed
@@ -58,8 +236,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'jet-composites/tt-question/loader']
        * Optional ViewModel method invoked after the View is removed from the
        * document DOM.
        * @param {Object} info - An object with the following key-value pairs:
-       * @param {Node} info.element - DOM element or where the binding is attached. This may be a 'virtual' element (comment node).
-       * @param {Function} info.valueAccessor - The binding's value accessor.
+       * @param {Node} info.element - DOM element or where the binding is attached. This may be a "virtual" element (comment node).
+       * @param {Function} info.valueAccessor - The binding"s value accessor.
        * @param {Array} info.cachedNodes - An Array containing cached nodes for the View if the cache is enabled.
        */
       self.handleDetached = function(info) {
@@ -72,6 +250,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'jet-composites/tt-question/loader']
      * each time the view is displayed.  Return an instance of the ViewModel if
      * only one instance of the ViewModel is needed.
      */
-    return new AboutViewModel();
+    return new TimesViewModel();
   }
 );

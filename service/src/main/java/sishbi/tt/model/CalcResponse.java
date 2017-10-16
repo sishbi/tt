@@ -6,22 +6,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 /**
- * Calculation Result.
+ * Calculation Response.
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CalcResult {
-  private int times;
-  private int by;
-  private int answer;
+public class CalcResponse {
+  private double times;
+  private double by;
+  private double answer;
+  private String op;
 
   /**
    * Default constructor.
    */
-  public CalcResult() {
+  public CalcResponse() {
     times = 0;
     by = 0;
     answer = 0;
+    op = "";
   }
 
   /**
@@ -30,42 +32,52 @@ public class CalcResult {
    * @param times  times.
    * @param by by.
    */
-  public CalcResult(int answer, int times, int by) {
+  public CalcResponse(double answer, double times, double by, String op) {
     this.times = times;
     this.by = by;
     this.answer = answer;
+    this.op = op;
   }
 
-  public int getTimes() {
+  public double getTimes() {
     return times;
   }
 
-  public int getBy() {
+  public double getBy() {
     return by;
   }
 
-  public int getAnswer() {
+  public double getAnswer() {
     return answer;
   }
 
-  public void setTimes(int times) {
+  public void setTimes(double times) {
     this.times = times;
   }
 
-  public void setBy(int by) {
+  public void setBy(double by) {
     this.by = by;
   }
 
-  public void setAnswer(int answer) {
+  public void setAnswer(double answer) {
     this.answer = answer;
+  }
+
+  public String getOp() {
+    return op;
+  }
+
+  public void setOp(String op) {
+    this.op = op;
   }
 
   @Override
   public String toString() {
     return "Calc{"
-      + times
-      + " * " + by
-      + " = " + answer
+      + times + " "
+      + op + " "
+      + by + " = "
+      + answer
       + '}';
   }
 
@@ -77,15 +89,16 @@ public class CalcResult {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    final CalcResult calcResult = (CalcResult) o;
+    final CalcResponse calcResponse = (CalcResponse) o;
     return
-      times == calcResult.times &&
-      by == calcResult.by &&
-      answer == calcResult.answer;
+      times == calcResponse.times &&
+      op.equals(calcResponse.op) &&
+      by == calcResponse.by &&
+      answer == calcResponse.answer;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(times, by, answer);
+    return Objects.hash(times, op, by, answer);
   }
 }

@@ -26,11 +26,11 @@
   ***************************** IMPORTANT INFORMATION ************************************ -->
 <html lang="en-us">
   <head>
-    <title>Oracle JET Starter Template - Web Nav Bar</title>
+    <title>Times Table Master</title>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="css/images/favicon.ico" type="image/x-icon" />
+    <!--<link rel="icon" href="css/images/favicon.ico" type="image/x-icon" />-->
 
     <!-- This is the main css file for the default Alta theme -->
     <!-- injector:theme -->
@@ -71,7 +71,7 @@
         </div>
         <div role="navigation" class="oj-web-applayout-max-width oj-web-applayout-navbar">
           <oj-navigation-list data="[[navDataSource]]"
-                              data-bind="css: smScreen() ? '' : 'oj-md-condense oj-md-justify-content-flex-end'"
+                              data-bind="css: smScreen() ? '' : 'oj-md-condense oj-md-justify-content-flex-start'"
                               display="[[smScreen() ? 'icons' : 'all']]"
                               edge="top"
                               item.renderer="[[oj.KnockoutTemplateUtils.getRenderer('navTemplate', true)]]"

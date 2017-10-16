@@ -3,11 +3,123 @@
  The Universal Permissive License (UPL), Version 1.0
  -->
 <div class="oj-hybrid-padding">
-  <h1>About Content Area</h1>
   <div>
-      To change the content of this section, you will make edits to the about.html file located in the /js/views folder.
+    Test yourself with these times tables.
   </div>
-  <div>
-    <tt-question id="q" by=[2] from=1 to=2></tt-question>
+  <br/>
+  <!--Running: <span id="runStatus" data-bind="text:running"></span>-->
+  <div id="calcForm" data-bind="visible: notRunning">
+    <div id="buttons">
+      <div class="oj-flex-bar">
+        <div class="oj-flex-bar-start">
+          <oj-button id="all" class="oj-button-sm" on-click="[[setAll]]">Mix of All</oj-button>
+          <oj-button id="clear" class="oj-button-sm" on-click="[[setNone]]">Clear</oj-button>
+        </div>
+      </div>
+    </div>
+    <div id="timesByCb" class="oj-sm-odd-cols-12 oj-md-odd-cols-4 oj-flex-items-pad">
+      <div class="oj-flex oj-sm-flex-items-initial">
+        <div class="oj-flex-item">
+          <oj-radioset aria-label="Basic or Advanced" value="{{basicAdv}}">
+            <oj-option id="basicOpt" value="basic">Basic</oj-option>
+            <oj-option id="advancedOpt" value="advanced">Advanced</oj-option>
+          </oj-radioset>
+        </div>
+        <div class="oj-flex-item oj-flex oj-sm-flex-items-initial oj-sm-flex-direction-column">
+          <div class="oj-flex-item">
+            <oj-checkboxset aria-label="Times By (1-12)" class="oj-choice-direction-row"
+                            disabled="[[isAdvanced]]" value="{{timesByBasic}}">
+              <oj-option value="2">2</oj-option>
+              <oj-option value="3">3</oj-option>
+              <oj-option value="4">4</oj-option>
+              <oj-option value="5">5</oj-option>
+              <oj-option value="6">6</oj-option>
+              <oj-option value="7">7</oj-option>
+              <oj-option value="8">8</oj-option>
+              <oj-option value="9">9</oj-option>
+              <oj-option value="10">10</oj-option>
+              <oj-option value="11">11</oj-option>
+              <oj-option value="12">12</oj-option>
+            </oj-checkboxset>
+            </div>
+          <div class="oj-flex-item">
+            <oj-checkboxset aria-label="Times By (1-50)" class="oj-choice-direction-row"
+                            disabled="[[isBasic]]" value="{{timesByAdv}}">
+              <oj-option value="0.03">0.03 (to 12)</oj-option>
+              <oj-option value="0.3">0.3 (to 12)</oj-option>
+              <oj-option value="0.4">0.4 (to 12)</oj-option>
+              <oj-option value="0.05">0.05 (to 12)</oj-option>
+              <oj-option value="0.5">0.5 (to 12)</oj-option>
+              <oj-option value="0.06">0.06 (to 12)</oj-option>
+              <oj-option value="0.6">0.6 (to 12)</oj-option>
+              <oj-option value="0.07">0.07 (to 12)</oj-option>
+              <oj-option value="0.7">0.7 (to 12)</oj-option>
+              <oj-option value="0.8">0.8 (to 12)</oj-option>
+              <oj-option value="0.9">0.9 (to 12)</oj-option>
+              <oj-option value="5">5 (to 50)</oj-option>
+              <oj-option value="15">15</oj-option>
+              <oj-option value="19">19</oj-option>
+              <oj-option value="20">20</oj-option>
+              <oj-option value="21">21</oj-option>
+              <oj-option value="22">22</oj-option>
+              <oj-option value="25">25</oj-option>
+              <oj-option value="40">40</oj-option>
+              <oj-option value="50">50</oj-option>
+            </oj-checkboxset>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oj-flex oj-sm-flex-initial">
+      <div id="numQuestions" class="oj-flex-item">
+        <oj-label for="numQ" class="oj-label-inline">Number of questions</oj-label>
+        <oj-input-text id="numQ" value="{{numQuestions}}" converter="[[numConverter]]" style="max-width:1em">
+        </oj-input-text>
+      </div>
+      <div id="multi-divide-both-radio" class="oj-flex-item">
+        <oj-radioset class="oj-choice-direction-row" aria-label="Operation" value="{{operation}}">
+          <oj-option id="multiplyOpt" value="*">Times By</oj-option>
+          <oj-option id="divideOpt" value="/">Divide By</oj-option>
+          <oj-option id="bothOpt" value="*/">Both</oj-option>
+        </oj-radioset>
+      </div>
+    </div>
+    <div id="startBtn">
+      <div class="oj-flex-bar">
+        <div class="oj-flex-bar-middle">
+          <oj-button id="start" class="oj-button-sm"
+                     disabled="[[noStart]]" on-click="[[getCalculations]]">Start</oj-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="resetSection" data-bind="visible: isRunning()">
+    <oj-button id="end" class="oj-button-sm" on-click="[[endQuestions]]">Reset</oj-button>
+  </div>
+  <div id="questions" data-bind="visible: isRunning() && !isComplete()">
+    <div class="oj-flex oj-sm-flex-items-initial oj-sm-align-items-center">
+      <span class="oj-flex-item oj-label-inline">Question</span>
+      <span class="oj-flex-item oj-label-inline" id="qCount" data-bind="text:numAnswers"></span>
+      <span class="oj-flex-item oj-label-inline">of</span>
+      <span class="oj-flex-item oj-label-inline" id="qTotal" data-bind="text:numQuestions"></span>
+    </div>
+    <div class="oj-flex oj-sm-flex-items-initial oj-sm-align-items-center">
+      <span class="oj-flex-item oj-label-inline" id="factor1" data-bind="text:factor1"></span>
+      <span class="oj-flex-item oj-label-inline" id="symbol" data-bind="text:symbol"></span>
+      <span class="oj-flex-item oj-label-inline" id="factor2" data-bind="text:factor2"></span>
+      <span class="oj-flex-item oj-label-inline" id="equals">=</span>
+      <oj-input-text class="oj-flex-item oj-sm-align-self-center" id="answer"
+                     on-value-changed="{{questionAnswered}}" value="{{answer}}" autofocus>
+      </oj-input-text>
+      <span class="oj-flex-item oj-label-inline oj-fwk-icon"
+            id="result" data-bind="css:correct, visible:answered"></span>
+      <span class="oj-flex-item oj-label-inline"
+            id="shouldBe" data-bind="text:answerShouldBe, visible:answered" style="padding-left: 1em"></span>
+    </div>
+  </div>
+  <br/>
+  <!--Complete: <span id="compStatus" data-bind="text:isComplete"></span>-->
+  <div id="resultsSection" data-bind="visible:isComplete">
+    <div id="results" data-bind="text:resultTxt"></div>
   </div>
 </div>
