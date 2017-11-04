@@ -5,7 +5,9 @@
   ~ This material is the confidential property of Oracle Corporation or its
   ~ licensors and may be used, reproduced, stored or transmitted only in
   ~ accordance with a valid Oracle license or sublicense agreement.
-  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>sishbi</groupId>
@@ -18,7 +20,5 @@
   </properties>
   <modules>
     <module>service</module>
-    <module>app</module>
-    <module>tt.ui</module>
   </modules>
 </project>

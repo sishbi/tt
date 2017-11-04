@@ -1,0 +1,92 @@
+body {
+  background-color: seagreen;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.oj-web-applayout-header {
+  background-color: seagreen;
+  color: white;
+}
+
+.oj-web-applayout-header-title {
+  background-color: seagreen;
+  color: white;
+  font-size: x-large;
+}
+
+.oj-web-applayout-body {
+  background-color: seagreen;
+  color: white;
+}
+
+.oj-web-applayout-footer {
+  background-color: seagreen;
+  color: white;
+}
+
+.oj-web-applayout-footer-item {
+  background-color: seagreen;
+  color: white;
+}
+
+.oj-label {
+  background-color: seagreen;
+  color: white;
+}
+
+.oj-checkbox-label {
+  background-color: seagreen;
+  color: white;
+}
+
+.oj-radio-label {
+  background-color: seagreen;
+  color: white;
+}
+
+#numQuestions {
+  max-width: 34%;
+}
+
+.q-panel.oj-panel {
+  background-color: white;
+  color: black;
+  align-content: center;
+  width: 50%;
+}
+
+.q-txt {
+  padding-bottom: 0.625em;
+  padding-right: 0.5em;
+  font-size: larger;
+}
+
+.q-question {
+  padding-top: 0.5em;
+  min-width: 20%;
+}
+
+.q-user-answer {
+  max-width: 50px;
+}
+
+.q-answer {
+  min-width: 60%;
+}
+
+.q-should-be {
+  padding-bottom: 0.625em;
+  padding-left: 0.625em;
+  font-size: larger;
+}
+
+.q-correct {
+  padding-bottom: 1.675em;
+  font-size: larger;
+}

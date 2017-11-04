@@ -4,7 +4,7 @@
  -->
 <div class="oj-hybrid-padding">
   <div>
-    Test yourself with these times tables.
+    Become a times table master.
   </div>
   <br/>
   <!--Running: <span id="runStatus" data-bind="text:running"></span>-->
@@ -82,7 +82,7 @@
         <oj-input-text id="numQ" value="{{numQuestions}}" converter="[[numConverter]]" style="max-width:1em">
         </oj-input-text>
       </div>
-      <div id="multi-divide-both-radio" class="oj-flex-item">
+      <div id="multi-divide-both-radio" class="oj-flex-item oj-sm-flex-items-initial">
         <oj-radioset class="oj-choice-direction-row" aria-label="Operation" value="{{operation}}">
           <oj-option id="multiplyOpt" value="*">Times By</oj-option>
           <oj-option id="divideOpt" value="/">Divide By</oj-option>
@@ -102,25 +102,33 @@
   <div id="resetSection" data-bind="visible: isRunning()">
     <oj-button id="end" class="oj-button-sm" on-click="[[endQuestions]]">Reset</oj-button>
   </div>
-  <div id="questions" data-bind="visible: isRunning() && !isComplete()">
+  <div id="questions" class="q-panel oj-panel" data-bind="visible: isRunning() && !isComplete()">
     <div class="oj-flex oj-sm-flex-items-initial oj-sm-align-items-center">
       <span class="oj-flex-item oj-label-inline">Question</span>
       <span class="oj-flex-item oj-label-inline" id="qCount" data-bind="text:numAnswers"></span>
       <span class="oj-flex-item oj-label-inline">of</span>
       <span class="oj-flex-item oj-label-inline" id="qTotal" data-bind="text:numQuestions"></span>
     </div>
-    <div class="oj-flex oj-sm-flex-items-initial oj-sm-align-items-center">
-      <span class="q-txt oj-flex-item" id="factor1" data-bind="text:factor1"></span>
-      <span class="q-txt oj-flex-item" id="symbol" data-bind="text:symbol"></span>
-      <span class="q-txt oj-flex-item" id="factor2" data-bind="text:factor2"></span>
-      <span class="q-txt oj-flex-item" id="equals">=</span>
-      <oj-input-text class="q-txt oj-flex-item oj-sm-align-self-center" id="answer"
-                     on-value-changed="{{questionAnswered}}" value="{{answer}}" autofocus>
-      </oj-input-text>
-      <span class="q-correct oj-flex-item oj-fwk-icon"
-            id="result" data-bind="css:correct, visible:answered"></span>
-      <span class="q-should-be oj-flex-item"
-            id="shouldBe" data-bind="text:answerShouldBe, visible:answered"></span>
+    <div class="oj-flex">
+      <div class="q-question oj-flex-item oj-sm-align-items-center">
+        <div class="oj-flex oj-sm-flex-items-0 oj-sm-align-items-center">
+          <span class="q-txt oj-flex-item" id="factor1" data-bind="text:factor1"></span>
+          <span class="q-txt oj-flex-item" id="symbol" data-bind="text:symbol"></span>
+          <span class="q-txt oj-flex-item" id="factor2" data-bind="text:factor2"></span>
+          <span class="q-txt oj-flex-item" id="equals">=</span>
+        </div>
+      </div>
+      <div class="q-answer oj-flex-item">
+        <div class="oj-flex oj-sm-flex-items-initial oj-sm-align-items-center">
+          <oj-input-text class="q-txt q-user-answer oj-flex-item oj-sm-align-self-center" id="answer"
+                         on-value-changed="{{questionAnswered}}" value="{{answer}}" autofocus>
+          </oj-input-text>
+          <div class="q-correct oj-flex-item oj-fwk-icon"
+                id="result" data-bind="css:correct, visible:answered"></div>
+          <div class="q-should-be oj-flex-item"
+                id="shouldBe" data-bind="text:answerShouldBe, visible:answered"></div>
+        </div>
+      </div>
     </div>
   </div>
   <br/>

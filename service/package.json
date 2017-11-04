@@ -1,16 +1,17 @@
 {
-  "name": "tt.ui",
+  "name": "tt",
   "version": "1.0.0",
-  "description": "An Oracle JavaScript Extension Toolkit(JET) web app",
+  "description": "Times Table Master",
   "dependencies": {
     "@oracle/oraclejet": "~4.0.0"
   },
   "devDependencies": {
+    "@oracle/grunt-oraclejet": "~4.0.0",
+    "@oracle/oraclejet-tooling": "~4.0.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "@oracle/grunt-oraclejet": "~4.0.0",
     "load-grunt-config": "0.19.2",
-    "@oracle/oraclejet-tooling": "~4.0.0",
+    "node-sass": "^4.5.3",
     "qunit-reporter-junit": "^1.1.1",
     "qunitjs": "^2.3.3"
   },

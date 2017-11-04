@@ -8,7 +8,7 @@
       "themes": "themes"
     },
     "staging": {
-      "web": "target/web",
+      "web": "target/tt",
       "hybrid": "target/hybrid",
       "themes": "target/themes"
     }

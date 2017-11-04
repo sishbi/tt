@@ -7,7 +7,7 @@
     <groupId>sishbi</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tt.service</artifactId>
+  <artifactId>service</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
@@ -15,6 +15,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+    <js-build>build</js-build>
   </properties>
 
   <dependencies>
@@ -24,12 +25,6 @@
       <version>8.0</version>
       <scope>provided</scope>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>org.eclipse</groupId>-->
-      <!--<artifactId>yasson</artifactId>-->
-      <!--<version>1.0</version>-->
-      <!--<scope>compile</scope>-->
-    <!--</dependency>-->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
@@ -94,7 +89,7 @@
   </dependencies>
 
   <build>
-    <finalName>tt.service</finalName>
+    <finalName>tt</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -111,6 +106,52 @@
             <version>1.0.1</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.6</version>
+        <configuration>
+          <nodeVersion>v6.10.1</nodeVersion>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>npm</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>grunt</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>grunt</goal>
+            </goals>
+            <configuration>
+              <arguments>${js-build} --platform=web</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
       </plugin>
     </plugins>
   </build>

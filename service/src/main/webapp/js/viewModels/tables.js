@@ -175,7 +175,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
             console.log("Incorrect: " + JSON.stringify(inc));
             incorrectTxt += "<p>" + inc.calc.times + " " + inc.symbol + " "
                          + inc.calc.by + " = " + inc.calc.answer
-                         + " (and not: " + inc.userAnswer + ")</p>";
+                         + " and not: " + inc.userAnswer + "</p>";
           });
           self.incorrectResultsTxt(incorrectTxt);
           self.isComplete(true);
@@ -220,7 +220,8 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         console.log("Sending calc request: " + JSON.stringify(calcReq));
         self.running(true);
 
-        fetch("http://localhost:8080/tt.service/api/times", {
+        fetch("http://localhost:8080/tt/api/times", {
+        // fetch("/tt/api/times", {
           method: "POST",
           mode: "cors",
           headers: {
