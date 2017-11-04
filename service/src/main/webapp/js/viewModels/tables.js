@@ -12,6 +12,8 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
     function TimesViewModel() {
       var self = this;
       // calculation input
+      // self.host = "http://localhost:8080";
+      self.host = "";
       self.level = ko.observable("basic");
       self.timesByBasic = ko.observableArray([]);
       self.timesByInter = ko.observableArray([]);
@@ -220,8 +222,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         console.log("Sending calc request: " + JSON.stringify(calcReq));
         self.running(true);
 
-        fetch("http://localhost:8080/tt/api/times", {
-        // fetch("/tt/api/times", {
+        fetch(self.host + "/tt/api/times", {
           method: "POST",
           mode: "cors",
           headers: {
