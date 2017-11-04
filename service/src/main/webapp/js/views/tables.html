@@ -108,6 +108,8 @@
       <span class="oj-flex-item oj-label-inline" id="qCount" data-bind="text:numAnswers"></span>
       <span class="oj-flex-item oj-label-inline">of</span>
       <span class="oj-flex-item oj-label-inline" id="qTotal" data-bind="text:numQuestions"></span>
+      <span class="oj-flex-item oj-label-inline"> - Time: </span>
+      <span class="oj-flex-item oj-label-inline" id="duration" data-bind="text:durationTxt"></span>
     </div>
     <div class="oj-flex">
       <div class="q-question oj-flex-item oj-sm-align-items-center">
@@ -134,6 +136,8 @@
   <br/>
   <!--Complete: <span id="compStatus" data-bind="text:isComplete"></span>-->
   <div id="resultsSection" data-bind="visible:isComplete">
+    <span class="oj-flex-item oj-label-inline">Total Time: </span>
+    <span class="oj-flex-item oj-label-inline" id="totalDuration" data-bind="text:totalDurationTxt"></span><br/>
     <div id="results" data-bind="text:resultTxt"></div><br/>
     <div id="incorrectResults" data-bind="html:incorrectResultsTxt"></div>
   </div>

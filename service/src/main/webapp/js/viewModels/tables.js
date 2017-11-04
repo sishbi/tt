@@ -54,6 +54,9 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       self.resultTxt = ko.observable("");
       self.incorrectResultsTxt = ko.observable("");
       self.incorrectAnswers = [];
+      self.startTime = 0;
+      self.timer = null;
+      self.now = ko.observable(0);
 
       self.isRunning = ko.computed(function() {
         return self.running() === true;
@@ -80,6 +83,66 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         return (self.level() === "basic" && numBasic === 0 ||
                 self.level() === "intermediate" && numInter === 0 ||
                 self.level() === "advanced" && numAdv === 0);
+      });
+
+      /**
+       * Format the duration as a string.
+       * @param {number} startTime the starting time (as seconds since epoch)
+       * @param {number} endTime the current (end) time (as seconds since epoch)
+       * @param {boolean} total whether to calculate the total time
+       * @returns {string} the formatted duration.
+       */
+      self.formatDuration = function(startTime, endTime, total) {
+        var duration = Math.floor(endTime - startTime);
+        var hours = Math.floor(duration / 3600);
+        duration = Math.floor(duration - hours * 3600);
+        var minutes = Math.floor(duration / 60);
+        var seconds = Math.floor(duration - minutes * 60);
+
+        function str_pad_left(string, pad, length) {
+          return (new Array(length+1).join(pad)+string).slice(-length);
+        }
+
+        if (total) {
+          return "" +
+            (hours > 0 ? hours + " hour" + (hours === 1 ? "" : "s") : "") +
+            (minutes > 0 ? " " + minutes + " minute" + (minutes === 1 ? "" : "s") + " and" : "") +
+            " " + seconds + " seconds";
+        } else {
+          return (hours > 0 ? (str_pad_left(hours, "0", 2) + ":") : "") +
+            (minutes > 0 ? str_pad_left(minutes, "0", 2) : "0") + ":" +
+            str_pad_left(seconds, "0", 2);
+        }
+      };
+
+      function getTimeNow() {
+        return Math.floor(new Date().getTime() / 1000);
+      }
+
+      self.startTimer = function() {
+        if (self.timer) {
+          self.stopTimer();
+        }
+        self.timer = setInterval(function () {
+          self.now(getTimeNow());
+        }, 1000);
+        console.log("Started timer...", self.timer);
+      };
+
+      self.stopTimer = function() {
+        console.log("Stopping timer...", self.timer);
+        if (self.timer) {
+          clearInterval(self.timer);
+          self.timer = null;
+        }
+      };
+
+      self.durationTxt = ko.computed(function() {
+        return self.formatDuration(self.startTime, self.now(), false);
+      });
+
+      self.totalDurationTxt = ko.computed(function() {
+        return self.formatDuration(self.startTime, self.now(), true);
       });
 
       self.setAll = function() {
@@ -170,6 +233,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         let numAnswers = self.numAnswers();
         numAnswers++;
         if (numAnswers > self.numQuestions()) {
+          self.stopTimer();
           self.resultTxt(self.resBegin + self.correctAnswers + self.resMiddle + self.numQuestions() + self.resEnd);
           self.incorrectResultsTxt("");
           let incorrectTxt = "";
@@ -195,6 +259,9 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
 
       self.endQuestions = function() {
         console.log("endQuestions");
+        self.stopTimer();
+        self.startTime = 0;
+        self.now(0);
         self.running(false);
         self.isComplete(false);
       };
@@ -239,6 +306,8 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
             self.numAnswers(0);
             self.position = 0;
             self.incorrectAnswers = [];
+            self.startTime = getTimeNow();
+            self.startTimer();
             self.nextQuestion();
           });
       };
