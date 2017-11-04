@@ -129,7 +129,7 @@
               <goal>npm</goal>
             </goals>
             <configuration>
-              <arguments>install</arguments>
+              <arguments>install --loglevel verbose</arguments>
             </configuration>
           </execution>
           <execution>

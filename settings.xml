@@ -6,9 +6,11 @@
   <pluginGroups>
   </pluginGroups>
 
+  <localRepository>.repo</localRepository>
+
   <proxies>
     <proxy>
-      <active>true</active>
+      <active>false</active>
       <protocol>http</protocol>
       <host>www-proxy.us.oracle.com</host>
       <port>80</port>
