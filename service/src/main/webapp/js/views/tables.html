@@ -7,7 +7,6 @@
     Become a times table master.
   </div>
   <br/>
-  <!--Running: <span id="runStatus" data-bind="text:running"></span>-->
   <div id="calcForm" data-bind="visible: notRunning">
     <div id="buttons">
       <div class="oj-flex-bar">
@@ -134,11 +133,15 @@
     </div>
   </div>
   <br/>
-  <!--Complete: <span id="compStatus" data-bind="text:isComplete"></span>-->
   <div id="resultsSection" data-bind="visible:isComplete">
-    <span class="oj-flex-item oj-label-inline">Total Time: </span>
-    <span class="oj-flex-item oj-label-inline" id="totalDuration" data-bind="text:totalDurationTxt"></span><br/>
-    <div id="results" data-bind="text:resultTxt"></div><br/>
+    <div class="oj-label-inline">Total Time: </div>
+    <div class="oj-label-inline" id="totalDuration" data-bind="text:totalDurationTxt"></div>
+    <div class="oj-label-inline"> -  Average Answer Time: </div>
+    <div class="oj-label-inline" id="avgAnswerTime" data-bind="text:avgAnswerTime"></div>
+    <div class="oj-label-inline"> seconds</div>
+    <br/>
+    <div id="results" data-bind="text:resultTxt"></div>
+    <br/>
     <div id="incorrectResults" data-bind="html:incorrectResultsTxt"></div>
   </div>
 </div>

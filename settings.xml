@@ -6,7 +6,7 @@
   <pluginGroups>
   </pluginGroups>
 
-  <localRepository>.repo</localRepository>
+  <localRepository>/Users/sbilling/IDEA/tt/.repo</localRepository>
 
   <proxies>
     <proxy>

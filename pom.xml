@@ -20,5 +20,6 @@
   </properties>
   <modules>
     <module>service</module>
+    <module>docker</module>
   </modules>
 </project>

@@ -12,8 +12,8 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
     function TimesViewModel() {
       var self = this;
       // calculation input
-      // self.host = "http://localhost:8080";
-      self.host = "";
+      self.host = "http://localhost:8080";
+      // self.host = "";
       self.level = ko.observable("basic");
       self.timesByBasic = ko.observableArray([]);
       self.timesByInter = ko.observableArray([]);
@@ -57,6 +57,11 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       self.startTime = 0;
       self.timer = null;
       self.now = ko.observable(0);
+      self.startAnswer = 0;
+      self.answerTime = 0;
+      self.totalAnswerTime = 0;
+      self.avgAnswerTime = ko.observable(0);
+      self.starting = ko.observable(false);
 
       self.isRunning = ko.computed(function() {
         return self.running() === true;
@@ -75,6 +80,9 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       });
 
       self.noStart = ko.computed(function() {
+        if (self.starting()) {
+          return true;
+        }
         let numBasic = self.timesByBasic().length;
         let numInter = self.timesByInter().length;
         let numAdv = self.timesByAdv().length;
@@ -197,6 +205,8 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       self.questionAnswered = function(event) {
         console.log("questionAnswered: answer=", event.detail.value);
         if (event.detail.value !== "") {
+          self.answerTime = getTimeNow() - self.startAnswer;
+          self.totalAnswerTime += self.answerTime;
           self.userAnswer = parseFloat(event.detail.value);
           self.answered(true);
           console.log("userAnswer=" + self.userAnswer + ", calcAnswer=" + self.calcAnswer);
@@ -233,7 +243,10 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         let numAnswers = self.numAnswers();
         numAnswers++;
         if (numAnswers > self.numQuestions()) {
+          self.starting(false);
           self.stopTimer();
+          var avg = self.totalAnswerTime / self.numQuestions();
+          self.avgAnswerTime(Math.round((avg + 0.00001) * 100) / 100);
           self.resultTxt(self.resBegin + self.correctAnswers + self.resMiddle + self.numQuestions() + self.resEnd);
           self.incorrectResultsTxt("");
           let incorrectTxt = "";
@@ -255,10 +268,12 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         self.symbol(self.currentCalc.op === "*" ? self.multiplySymbol : self.divideSymbol);
         self.userAnswer = 0;
         self.calcAnswer = self.currentCalc.answer;
+        self.startAnswer = getTimeNow();
       };
 
       self.endQuestions = function() {
         console.log("endQuestions");
+        self.starting(false);
         self.stopTimer();
         self.startTime = 0;
         self.now(0);
@@ -267,6 +282,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       };
 
       self.getCalculations = function() {
+        self.starting(true);
         if (self.level() === "basic") {
           self.to = 12;
           self.timesBy = self.timesByBasic();
@@ -287,7 +303,6 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
           op: self.op
         };
         console.log("Sending calc request: " + JSON.stringify(calcReq));
-        self.running(true);
 
         fetch(self.host + "/tt/api/times", {
           method: "POST",
@@ -300,6 +315,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         })
           .then(function(response) { return response.json(); })
           .then(function(json) {
+            self.running(true);
             console.log("Got calc response: length=" + json.length, json);
             self.calculations = json;
             self.correctAnswers = 0;
@@ -307,6 +323,10 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
             self.position = 0;
             self.incorrectAnswers = [];
             self.startTime = getTimeNow();
+            self.startAnswer = 0;
+            self.answerTime = 0;
+            self.totalAnswerTime = 0;
+            self.avgAnswerTime(0);
             self.startTimer();
             self.nextQuestion();
           });
