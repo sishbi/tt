@@ -65,8 +65,8 @@
           </execution>
         </executions>
         <configuration>
-          <repository>sishbi/repo</repository>
-          <tag>tt-${project.version}</tag>
+          <repository>sishbi/tt</repository>
+          <tag>latest</tag>
           <buildArgs>
             <JAR_FILE>tt.war</JAR_FILE>
           </buildArgs>
