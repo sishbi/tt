@@ -1,0 +1,6 @@
+applications:
+   - name: sishbi-tt
+     random-route: true
+     path: target/service.war
+     memory: 512M
+     instances: 1
