@@ -15,7 +15,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       console.log(window.location.search);
       const urlParams = new URLSearchParams(window.location.search);
       self.host = urlParams.get("host");
-      self.path = self.host + window.location.pathname;
+      self.path = (self.host ? self.host : "") + window.location.pathname;
       self.timesByL1 = ko.observableArray([]);
       self.timesByL2 = ko.observableArray([]);
       self.timesByL3 = ko.observableArray([]);
