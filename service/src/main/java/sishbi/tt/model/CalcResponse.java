@@ -11,18 +11,18 @@ import java.util.Objects;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CalcResponse {
-  private double times;
-  private double by;
-  private double answer;
+  private String times;
+  private String by;
+  private String answer;
   private String op;
 
   /**
    * Default constructor.
    */
   public CalcResponse() {
-    times = 0;
-    by = 0;
-    answer = 0;
+    times = "";
+    by = "";
+    answer = "";
     op = "";
   }
 
@@ -32,34 +32,34 @@ public class CalcResponse {
    * @param times  times.
    * @param by by.
    */
-  public CalcResponse(double answer, double times, double by, String op) {
+  public CalcResponse(String answer, String times, String by, String op) {
     this.times = times;
     this.by = by;
     this.answer = answer;
     this.op = op;
   }
 
-  public double getTimes() {
+  public String getTimes() {
     return times;
   }
 
-  public double getBy() {
+  public String getBy() {
     return by;
   }
 
-  public double getAnswer() {
+  public String getAnswer() {
     return answer;
   }
 
-  public void setTimes(double times) {
+  public void setTimes(String times) {
     this.times = times;
   }
 
-  public void setBy(double by) {
+  public void setBy(String by) {
     this.by = by;
   }
 
-  public void setAnswer(double answer) {
+  public void setAnswer(String answer) {
     this.answer = answer;
   }
 
@@ -91,10 +91,10 @@ public class CalcResponse {
     }
     final CalcResponse calcResponse = (CalcResponse) o;
     return
-      times == calcResponse.times &&
+      times.equals(calcResponse.times) &&
       op.equals(calcResponse.op) &&
-      by == calcResponse.by &&
-      answer == calcResponse.answer;
+      by.equals(calcResponse.by) &&
+      answer.equals(calcResponse.answer);
   }
 
   @Override

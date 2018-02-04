@@ -1,5 +1,5 @@
 body {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
@@ -10,43 +10,43 @@ body {
 }
 
 .oj-web-applayout-header {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 
 .oj-web-applayout-header-title {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
   font-size: x-large;
 }
 
 .oj-web-applayout-body {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 
 .oj-web-applayout-footer {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 
 .oj-web-applayout-footer-item {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 
 .oj-label {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 
 .oj-checkbox-label {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 
 .oj-radio-label {
-  background-color: seagreen;
+  background-color: #004000;
   color: white;
 }
 

@@ -38,8 +38,7 @@ public class TimesTableResource {
       return null;
     }
     //calculate set of times tables times 'by' until 'to'
-    final List<CalcResponse> results = service.getResults(request.getBy(), request.getFrom(),
-                                                          request.getTo(), request.getOp());
+    final List<CalcResponse> results = service.getResults(request.getBy(), request.getOp());
     LOG.debug("Calculation results: {}", results);
     return results;
   }
