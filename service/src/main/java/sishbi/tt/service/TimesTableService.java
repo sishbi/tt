@@ -38,22 +38,44 @@ public class TimesTableService {
       final int from = 1;
       final double by = Double.parseDouble(byTo[0]);
       final int to = Integer.parseInt(byTo[1]);
+      boolean odd = false;
+      if (byTo.length > 2) {
+        odd = "Odd".equalsIgnoreCase(byTo[2]);
+        LOG.debug("including Odd numbers");
+      }
       //calculate set of times tables 'times' * 'by' until 'to'
+      if (odd) {
+        calcResult(op, calculations, by, 0.5);
+      }
       for (int times = from; times <= to; times++) {
-        final String answer = df.format(times * by);
-        LOG.debug("Calculated: {} * {} = {}", times, df.format(by), answer);
-        if (op.contains("*")) {
-          // answer = times * by
-          calculations.add(new CalcResponse(answer, Integer.toString(times), df.format(by), "*"));
-        }
-        if (op.contains("/")) {
-          // times = answer / by
-          calculations.add(new CalcResponse(Integer.toString(times), answer, df.format(by), "/"));
+        calcResult(op, calculations, by, times);
+        if (odd) {
+          calcResult(op, calculations, by, times + 0.5);
         }
       }
     }
     Collections.shuffle(calculations);
     LOG.debug("Calculated {} results", calculations.size());
     return calculations;
+  }
+
+  /**
+   * Calculate an answer.
+   * @param op the operator (* or /)
+   * @param calculations the list of calculations
+   * @param by times by
+   * @param times the number to multiply
+   */
+  private void calcResult(String op, List<CalcResponse> calculations, double by, double times) {
+    final String answer = df.format(times * by);
+    LOG.debug("Calculated: {} * {} = {}", times, df.format(by), answer);
+    if (op.contains("*")) {
+      // answer = times * by
+      calculations.add(new CalcResponse(answer, df.format(times), df.format(by), "*"));
+    }
+    if (op.contains("/")) {
+      // times = answer / by
+      calculations.add(new CalcResponse(df.format(times), answer, df.format(by), "/"));
+    }
   }
 }

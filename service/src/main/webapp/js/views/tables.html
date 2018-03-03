@@ -80,6 +80,23 @@
           </oj-checkboxset>
         </div>
       </div>
+      <div class='oj-flex-bar'>
+        <div class='oj-flex-bar-start'>
+          <oj-label id="level4"
+                    class="oj-label-inline level-label">Level 4</oj-label>
+        </div>
+        <div class='oj-flex-bar-middle'>
+          <oj-checkboxset aria-label="Level 4 Times By" class="oj-choice-direction-row"
+                          value="{{timesByL4}}">
+            <oj-option value="0.5,50">0.5 (to 50)</oj-option>
+            <oj-option value="0.5,100">0.5 (to 100)</oj-option>
+            <oj-option value="1.5,50">1.5 (to 50)</oj-option>
+            <oj-option value="2.5,50">2.5 (to 50)</oj-option>
+            <oj-option value="3.5,50">3.5 (to 50)</oj-option>
+            <oj-option value="2,50,Odd">2 (Odd numbers to 100)</oj-option>
+          </oj-checkboxset>
+        </div>
+      </div>
     </div>
     <div class="oj-flex oj-sm-flex-initial">
       <div id="numQuestions" class="oj-flex-item">
@@ -104,6 +121,7 @@
       </div>
     </div>
   </div>
+
   <!-- ko if: isRunning() -->
   <div id="resetSection" data-bind="visible: isRunning()">
     <oj-button id="end" class="oj-button-sm" on-click="[[endQuestions]]">Reset</oj-button>
@@ -140,6 +158,7 @@
     </div>
   </div>
   <!-- /ko -->
+
   <br/>
   <div id="resultsSection" data-bind="visible:isComplete">
     <div class="oj-label-inline">Total Time: </div>

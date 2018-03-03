@@ -19,6 +19,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       self.timesByL1 = ko.observableArray([]);
       self.timesByL2 = ko.observableArray([]);
       self.timesByL3 = ko.observableArray([]);
+      self.timesByL4 = ko.observableArray([]);
       self.numQuestions = ko.observable("12");
       self.operation = ko.observable("*");
       // calculation response
@@ -80,9 +81,10 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         const numL1 = self.timesByL1().length;
         const numL2 = self.timesByL2().length;
         const numL3 = self.timesByL3().length;
+        const numL4 = self.timesByL4().length;
         console.log("noStart: numL1=" + numL1 +
-                    ", numL2=" + numL2 + ", numL3=" + numL3);
-        return (numL1 === 0 && numL2 === 0 && numL3 === 0);
+                    ", numL2=" + numL2 + ", numL3=" + numL3 + ", numL4=" + numL4);
+        return (numL1 === 0 && numL2 === 0 && numL3 === 0 && numL4 === 0);
       });
 
       self.numQuestionsValid = ko.computed(function() {
@@ -166,7 +168,7 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         if (event.defaultPrevented) {
           return; // Do nothing if the event was already processed
         }
-        // console.log("Key: "" + event.key + """);
+        // console.log("Key: '" + event.key + "'");
         switch (event.key) {
         case "0":
         case "1":
@@ -181,6 +183,31 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
         case ".":
         case "Enter":
         case "Backspace":
+        case "Delete":
+          break;
+        default:
+          event.preventDefault();
+        }
+      };
+
+      self.checkAnswerKey = function(event) {
+        if (event.defaultPrevented) {
+          return; // Do nothing if the event was already processed
+        }
+        // console.log("Click: '" + event.target + "'");
+        switch (event.target) {
+        case "key0":
+        case "key1":
+        case "key2":
+        case "key3":
+        case "key4":
+        case "key5":
+        case "key6":
+        case "key7":
+        case "key8":
+        case "key9":
+        case "keydot":
+        case "keyequal":
           break;
         default:
           event.preventDefault();
@@ -204,7 +231,11 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
             self.correct("oj-fwk-icon-status-error");
             self.answerShouldBe(self.calcAnswer);
             nextTimeout = 1000;
-            self.incorrectAnswers.push({calc: self.currentCalc, symbol: self.symbol(), userAnswer: self.userAnswer});
+            self.incorrectAnswers.push({
+              calc: self.currentCalc,
+              symbol: self.symbol(),
+              userAnswer: self.userAnswer
+            });
           }
 
           setTimeout(function() {
@@ -296,7 +327,11 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
 
       self.getCalculations = function() {
         self.starting(true);
-        const timesBy = [].concat(self.timesByL1()).concat(self.timesByL2()).concat(self.timesByL3());
+        const timesBy =
+          [].concat(self.timesByL1())
+            .concat(self.timesByL2())
+            .concat(self.timesByL3())
+            .concat(self.timesByL4());
         self.op = self.operation();
         console.log("getCalculation, by=" + timesBy + ", op=" + self.op);
         const calcReq = {
@@ -331,7 +366,10 @@ define(["ojs/ojcore", "knockout", "jquery", "ojs/ojbutton", "ojs/ojcheckboxset",
       };
 
       self.handleBindingsApplied = function(info) {
-        $("#answer").off("keydown").on("keydown", self.checkAnswer);
+        $(document).ready(() => {
+          $("body").off("keydown").on("keydown", self.checkAnswer);
+          $(".keys").off("click").on("click", self.checkAnswerKey);
+        });
       };
 
       self.handleDetached = function(info) {

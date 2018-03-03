@@ -40,6 +40,10 @@ body {
   color: white;
 }
 
+.oj-label.level-label {
+  width: 120px;
+}
+
 .oj-checkbox-label {
   background-color: #004000;
   color: white;
