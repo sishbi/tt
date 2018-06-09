@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Simon Billingsley. All rights reserved.
+ */
+
 package sishbi.tt.model;
 
 import javax.xml.bind.annotation.XmlAccessType;

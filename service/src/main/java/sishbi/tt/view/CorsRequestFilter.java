@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Simon Billingsley. All rights reserved.
+ */
+
 package sishbi.tt.view;
 
 import org.apache.logging.log4j.LogManager;
