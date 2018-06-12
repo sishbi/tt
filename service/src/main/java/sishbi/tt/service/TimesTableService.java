@@ -23,14 +23,16 @@ import sishbi.tt.model.CalcResponse;
 @Stateless
 public class TimesTableService {
   private static final Logger LOG = LogManager.getLogger();
-  private static final DecimalFormat df = new DecimalFormat("###.##", new DecimalFormatSymbols(Locale.ENGLISH));
+  private static final DecimalFormat DF = new DecimalFormat("###.##", new DecimalFormatSymbols(Locale.ENGLISH));
+  private static final double HALF = 0.5;
+
   static {
-    df.setRoundingMode(RoundingMode.HALF_UP);
+    DF.setRoundingMode(RoundingMode.HALF_UP);
   }
 
   /**
    * Get list of results (e.g. A = B * C).
-   * @param byList the multipliers.
+   * @param byList the multipliers (format: by,to[,odd]).
    * @param op     the operators (*, /)
    * @return the list of calculation results.
    */
@@ -44,17 +46,18 @@ public class TimesTableService {
       final int to = Integer.parseInt(byTo[1]);
       boolean odd = false;
       if (byTo.length > 2) {
-        odd = "Odd".equalsIgnoreCase(byTo[2]);
-        LOG.debug("including Odd numbers");
+        odd = "odd".equalsIgnoreCase(byTo[2]);
+        LOG.debug("including odd numbers");
       }
       //calculate set of times tables 'times' * 'by' until 'to'
       if (odd) {
-        calcResult(op, calculations, by, 0.5);
+        calcResult(op, calculations, by, HALF);
       }
+      //loop: 1..to
       for (int times = from; times <= to; times++) {
         calcResult(op, calculations, by, times);
         if (odd) {
-          calcResult(op, calculations, by, times + 0.5);
+          calcResult(op, calculations, by, times + HALF);
         }
       }
     }
@@ -71,15 +74,17 @@ public class TimesTableService {
    * @param times the number to multiply
    */
   private void calcResult(String op, List<CalcResponse> calculations, double by, double times) {
-    final String answer = df.format(times * by);
-    LOG.debug("Calculated: {} * {} = {}", times, df.format(by), answer);
+    final String answer = DF.format(times * by);
+    final String byStr = DF.format(by);
+    final String timesStr = DF.format(times);
+    LOG.debug("Calculated: {} * {} = {}", timesStr, byStr, answer);
     if (op.contains("*")) {
       // answer = times * by
-      calculations.add(new CalcResponse(answer, df.format(times), df.format(by), "*"));
+      calculations.add(new CalcResponse(answer, timesStr, byStr, "*"));
     }
     if (op.contains("/")) {
       // times = answer / by
-      calculations.add(new CalcResponse(df.format(times), answer, df.format(by), "/"));
+      calculations.add(new CalcResponse(timesStr, answer, byStr, "/"));
     }
   }
 }

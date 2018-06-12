@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sishbi.tt.model.CalcRequest;
 import sishbi.tt.model.CalcResponse;
+import sishbi.tt.service.TimesTableService;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -19,19 +20,27 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
- * tt.
+ * Times Tables resource.
  */
 @Path("/times")
 public class TimesTableResource {
   private static final Logger LOG = LogManager.getLogger();
   @Inject
-  private sishbi.tt.service.TimesTableService service;
+  private TimesTableService service;
 
+  /**
+   * Initialise the JAX-RS bean.
+   */
   @PostConstruct
   public void init() {
     LOG.info("Starting TT");
   }
 
+  /**
+   * Handle a POST request to calculate the times tables.
+   * @param request the calculation request.
+   * @return a list of calculation results.
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
